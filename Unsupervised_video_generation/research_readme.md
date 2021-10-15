@@ -21,7 +21,7 @@ When I tried FOMM for train and inference, the quality was not that good as belo
 ![Result](assets/output1.png)
 
 First strategy I thought was to consider the relationship between frames like other 
-[video generation models](assets/Video_generation.md)
+[video generation models](assets/Video_Generation.md)
 
 I adapted 3D networks for driving loss from generated and real images not comparing image to image but
 comparing videos to videos. I used to train 3 frames for 5 frames with sequentially extracted or
