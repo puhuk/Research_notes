@@ -22,6 +22,11 @@ I started Masters program of data science from March 2021 and decided to leave t
   
 3. Unsupervised landmark detection
 
-  Subject: From videos, 
+   Subject: From videos, find landmarks of the objects in unsupervised methods
+   
+   Very early stage of research (Oct. 2021) and considering some details of research step.
+   1) Find landmarks from videos in unsupervised / self-supervised method
+   2) Reshape objects from detected landmarks
+   3) Reformat 3D shape from 2D images with detected landmarks 
   
 
