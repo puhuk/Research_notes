@@ -1,4 +1,4 @@
-After holding [Unsupervised human video generation](Unsupervised_video_generation/research_readme.md) subject,
+After holding [Unsupervised human video generation](../Unsupervised_video_generation/research_readme.md) subject,
 I decided to solve landmark detection problems with unsupervised or self-supervised method
 
 [This](assets/proposal.pdf) is my proposal for solving this topic
