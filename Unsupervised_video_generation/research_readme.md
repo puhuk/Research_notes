@@ -46,6 +46,6 @@ a) SOTA for synthesizing dynamic details show outstanding performance with defin
 b) It seems good contribution if I solve such problems with unsupervised methods without pretrained human body model,
    but unfortunately I do not come up with such a thing
 
-
+When I get some ideas with solving this problem, I'd like to come back and resolve this :)
 
 
