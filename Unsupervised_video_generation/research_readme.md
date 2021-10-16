@@ -37,14 +37,19 @@ So I surveyed research with such problems like [these](assets/dynamic_survey.md)
 my baseline model (like Gram–Schmidt matrix for style transfer, optical flow for intra-frames relation) but
 result was not get better.
 
+I think the result affected from ` landmark detection quality ` so there comes some frame with different direction of head and body.
+![landmark detection](assets/keypoint_1.png)
+![landmark detection](assets/keypoint_2.png)
+
 Next I tried to find out research list that exactly similar with my topic (like solve problems of blurring patterns).
 And I find out some [research](assets/texture_synthesis.md) and almost of them solves by partitioning the body from
 pretrained body segmentation model.
 And I hold this topic here with some reasons below.
 
-a) SOTA for synthesizing dynamic details show outstanding performance with defined problems (Deblurring textures)
-b) It seems good contribution if I solve such problems with unsupervised methods without pretrained human body model,
-   but unfortunately I do not come up with such a thing
+`a) SOTA for synthesizing dynamic details show outstanding performance with defined problems (Deblurring textures) `
+
+`b) It seems good contribution if I solve such problems with unsupervised methods without pretrained human body model,
+   but unfortunately I do not come up with such a thing `
 
 When I get some ideas with solving this problem, I'd like to come back and resolve this :)
 
