@@ -38,7 +38,7 @@ my baseline model (like Gram–Schmidt matrix for style transfer, optical flow f
 result was not get better.
 
 I think the result affected from ` landmark detection quality ` so there comes some frame with different direction of head and body.
-![landmark detection](assets/keypoint_1.png)
+![landmark detection](assets/keypoint_3.png)
 ![landmark detection](assets/keypoint_2.png)
 
 Next I tried to find out research list that exactly similar with my topic (like solve problems of blurring patterns).
