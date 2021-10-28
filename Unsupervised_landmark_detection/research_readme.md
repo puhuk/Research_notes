@@ -9,3 +9,9 @@ there are some topics based on [previous research](assets/landmark_detection.md)
     1) Find landmarks from videos in unsupervised / self-supervised method
     2) Reshape objects from detected landmarks
     3) Reformat 3D shape from 2D images with detected landmarks 
+
+Related research
+
+1) Unsupervised landmark detection
+2) Landmark detection with generative model
+3) Unsupervised Part Representation with optical flows
