@@ -47,10 +47,10 @@ class video_dataset(Dataset):
     def __getitem__(self, idx):
         out = {}
         images = glob.glob(os.path.join(self.root_dir, self.videos[idx])+'/*.png')
-        print(images)
+        # print(images)
         num_frames = len(images)
 
-        print(num_frames, self.frames_per_video)
+        # print(num_frames, self.frames_per_video)
 
         source_idx, target_idx = np.sort(np.random.choice(num_frames-self.frames_per_video, replace=False, size=2))
         source_video, target_video = [], []
@@ -60,7 +60,7 @@ class video_dataset(Dataset):
 
         source_video = np.array(source_video)
         target_video = np.array(target_video)
-        print(source_video.shape, target_video.shape)
+        # print(source_video.shape, target_video.shape)
 
         out['source'] = source_video.transpose((3, 0, 1, 2))
         out['target'] = target_video.transpose((3, 0, 1, 2))
