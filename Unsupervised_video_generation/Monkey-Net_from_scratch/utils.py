@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import torch
 
 from utils_external.sync_batchnorm import SynchronizedBatchNorm2d as BatchNorm2d
+from utils_external.sync_batchnorm import SynchronizedBatchNorm3d as BatchNorm3d
 
 
 class UpBlock2d(nn.Module):
@@ -122,7 +123,7 @@ class Decoder(nn.Module):
     Hourglass Decoder
     """
 
-    def __init__(self, block_expansion, in_features, num_blocks=3, max_features=256):
+    def __init__(self, block_expansion, in_features, out_features=10, num_blocks=3, max_features=256, dimension=2):
         super(Decoder, self).__init__()
 
         up_blocks = []
@@ -134,8 +135,9 @@ class Decoder(nn.Module):
                 out_filters = min(max_features, block_expansion * (2 ** i))
                 up_blocks.append(UpBlock2d(in_filters, out_filters, kernel_size=3, padding=1))
 
+            # up_blocks.append(nn.Conv2d())
             self.up_blocks = nn.ModuleList(up_blocks)
-            self.out_filters = block_expansion + in_features
+            self.conv = nn.Conv2d(in_channels=block_expansion + in_features, out_channels=out_features, kernel_size=(3,3), padding=(1,1))
 
         elif dimension==3:
             kernel_size = (3, 3, 3)
@@ -145,13 +147,12 @@ class Decoder(nn.Module):
 
             for i in range(num_blocks)[::-1]:
                 up_blocks.append(UpBlock3D((1 if i == num_blocks - 1 else 2) * min(max_features, block_expansion * (
-                    2 ** (i + 1))) + additional_features_for_block,
+                    2 ** (i + 1))),
                                         min(max_features, block_expansion * (2 ** i)),
                                         kernel_size=kernel_size, padding=padding))
 
-            up_blocks.apppend(nn.Conv3d(in_channels=block_expansion + in_features + additional_features_for_block,
-                                    out_channels=out_features, kernel_size=kernel_size, padding=padding))
             self.up_blocks = nn.ModuleList(up_blocks)
+            self.conv = nn.Conv3d(in_channels=block_expansion + in_features, out_channels=out_features, kernel_size=kernel_size, padding=padding)
 
     def forward(self, x):
         out = x.pop()
@@ -161,4 +162,7 @@ class Decoder(nn.Module):
             # print("skip", out.shape, skip.shape, len(skip.T))
             # skip = skip.T[:len(skip.T)-1].T
             out = torch.cat([out, skip], dim=1)
+
+        if self.conv is not None:
+            return self.conv(out)
         return out
