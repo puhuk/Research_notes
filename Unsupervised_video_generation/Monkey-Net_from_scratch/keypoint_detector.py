@@ -4,6 +4,29 @@ import torch.nn.functional as F
 # from modules.util import Hourglass, make_coordinate_grid, matrix_inverse, smallest_singular
 from utils import Encoder, Decoder
 
+def kp2gaussian(kp, spatial_size, kp_variance=0.001):
+    """
+    Transform a keypoint into gaussian like representation
+    """
+    mean = kp['value']
+
+    coordinate_grid = make_coordinate_grid(spatial_size, mean.type())
+    number_of_leading_dimensions = len(mean.shape) - 1
+    shape = (1,) * number_of_leading_dimensions + coordinate_grid.shape
+    coordinate_grid = coordinate_grid.view(*shape)
+    repeats = mean.shape[:number_of_leading_dimensions] + (1, 1, 1)
+    coordinate_grid = coordinate_grid.repeat(*repeats)
+
+    # Preprocess kp shape
+    shape = mean.shape[:number_of_leading_dimensions] + (1, 1, 2)
+    mean = mean.view(*shape)
+
+    mean_sub = (coordinate_grid - mean)
+
+    out = torch.exp(-0.5 * (mean_sub ** 2).sum(-1) / kp_variance)
+
+    return out
+
 def gaussian2kp_2d(heatmap):
     """
     Extract the mean and from a heatmap
