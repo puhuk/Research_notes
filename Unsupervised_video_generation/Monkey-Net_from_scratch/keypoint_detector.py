@@ -86,8 +86,8 @@ class KPDetector(nn.Module):
     Detecting a keypoints. Return keypoint position and variance.
     """
 
-    def __init__(self, block_expansion, num_kp, num_channels, max_features, num_blocks, temperature,
-                 kp_variance, scale_factor=1, clip_variance=None, dimension=2):
+    def __init__(self, block_expansion=32, num_kp=10, num_channels=3, max_features=1024, num_blocks=5, temperature=0.1,
+                 kp_variance='matrix', scale_factor=1, clip_variance=None, dimension=2):
         super(KPDetector, self).__init__()
         self.dimension = dimension
         self.num_kp = num_kp
@@ -106,11 +106,14 @@ class KPDetector(nn.Module):
 
         heatmap = self.predictor(x)
         final_shape = heatmap.shape
+        out= {}
 
         if self.dimension==2:
             heatmap = heatmap.view(final_shape[0], final_shape[1], -1)
             heatmap = F.softmax(heatmap / self.temperature, dim=2)
             heatmap = heatmap.view(*final_shape)
+
+            # out['heatmap'] = heatmap
 
             out = gaussian2kp_2d(heatmap)
 
@@ -120,5 +123,7 @@ class KPDetector(nn.Module):
             heatmap = heatmap.view(*final_shape)
 
             out = gaussian2kp_3d(heatmap, self.kp_variance, self.clip_variance)
+
+            # out['heatmap'] = heatmap
 
         return out
