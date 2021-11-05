@@ -4,7 +4,7 @@ import torch.nn.functional as F
 # from modules.util import Hourglass, make_coordinate_grid, matrix_inverse, smallest_singular
 from utils import Encoder, Decoder
 
-def kp2gaussian(kp, spatial_size, kp_variance=0.001):
+def kp2gaussian_2d(kp, spatial_size, kp_variance=0.001):
     """
     Transform a keypoint into gaussian like representation
     """
@@ -24,6 +24,41 @@ def kp2gaussian(kp, spatial_size, kp_variance=0.001):
     mean_sub = (coordinate_grid - mean)
 
     out = torch.exp(-0.5 * (mean_sub ** 2).sum(-1) / kp_variance)
+
+    return out
+
+def kp2gaussian_3d(kp, spatial_size, kp_variance='matrix'):
+    """
+    Transform a keypoint into gaussian like representation
+    """
+    mean = kp['mean']
+
+    coordinate_grid = make_coordinate_grid(spatial_size, mean.type())
+
+    number_of_leading_dimensions = len(mean.shape) - 1
+    shape = (1,) * number_of_leading_dimensions + coordinate_grid.shape
+
+    coordinate_grid = coordinate_grid.view(*shape)
+    repeats = mean.shape[:number_of_leading_dimensions] + (1, 1, 1)
+    coordinate_grid = coordinate_grid.repeat(*repeats)
+
+    # Preprocess kp shape
+    shape = mean.shape[:number_of_leading_dimensions] + (1, 1, 2)
+    mean = mean.view(*shape)
+
+    mean_sub = (coordinate_grid - mean)
+    if kp_variance == 'matrix':
+        var = kp['var']
+        inv_var = matrix_inverse(var)
+        shape = inv_var.shape[:number_of_leading_dimensions] + (1, 1, 2, 2)
+        inv_var = inv_var.view(*shape)
+        under_exp = torch.matmul(torch.matmul(mean_sub.unsqueeze(-2), inv_var), mean_sub.unsqueeze(-1))
+        under_exp = under_exp.squeeze(-1).squeeze(-1)
+        out = torch.exp(-0.5 * under_exp)
+    elif kp_variance == 'single':
+        out = torch.exp(-0.5 * (mean_sub ** 2).sum(-1) / kp['var'])
+    else:
+        out = torch.exp(-0.5 * (mean_sub ** 2).sum(-1) / kp_variance)
 
     return out
 
