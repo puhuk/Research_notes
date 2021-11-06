@@ -130,11 +130,11 @@ def make_coordinate_grid(spatial_size, type):
     return meshed
 
 class Hourglass(nn.Module):
-    def __init__(self, dimension=2, num_kp=10):
+    def __init__(self, in_features=3, dimension=2, num_kp=10):
         super(Hourglass, self).__init__()
         self.dimension = dimension
-        self.encoder = Encoder(in_features=3, max_features=1024, block_expansion=32,dimension=self.dimension)
-        self.decoder = Decoder(in_features=3, max_features=1024, block_expansion=32, dimension=self.dimension, out_features=num_kp)
+        self.encoder = Encoder(in_features=self.in_features, max_features=1024, block_expansion=32,dimension=self.dimension)
+        self.decoder = Decoder(in_features=self.in_features, max_features=1024, block_expansion=32, dimension=self.dimension, out_features=num_kp)
 
     def forward(self, x):
         return self.decoder(self.encoder(x))
