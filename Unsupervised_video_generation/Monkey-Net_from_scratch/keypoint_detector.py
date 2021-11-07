@@ -3,6 +3,7 @@ import torch
 import torch.nn.functional as F
 # from modules.util import Hourglass, make_coordinate_grid, matrix_inverse, smallest_singular
 from utils import Encoder, Decoder
+from utils import Hourglass
 
 def kp2gaussian_2d(kp, spatial_size, kp_variance=0.001):
     """
@@ -129,15 +130,6 @@ def make_coordinate_grid(spatial_size, type):
 
     return meshed
 
-class Hourglass(nn.Module):
-    def __init__(self, in_features=3, dimension=2, num_kp=10):
-        super(Hourglass, self).__init__()
-        self.dimension = dimension
-        self.encoder = Encoder(in_features=self.in_features, max_features=1024, block_expansion=32,dimension=self.dimension)
-        self.decoder = Decoder(in_features=self.in_features, max_features=1024, block_expansion=32, dimension=self.dimension, out_features=num_kp)
-
-    def forward(self, x):
-        return self.decoder(self.encoder(x))
 
 class KPDetector(nn.Module):
     """

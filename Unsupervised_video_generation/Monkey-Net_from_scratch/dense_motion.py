@@ -1,8 +1,9 @@
 from torch import nn
 import torch.nn.functional as F
 import torch
-from util import Hourglass, make_coordinate_grid, SameBlock3D
-from modules.movement_embedding import MovementEmbeddingModule
+from utils import Hourglass, SameBlock3D
+from keypoint_detector import make_coordinate_grid
+from movement import MovementEmbeddingModule
 
 
 class DenseMotionModule(nn.Module):
@@ -27,9 +28,9 @@ class DenseMotionModule(nn.Module):
                                             groups=num_kp + 1, kernel_size=(1, 1, 1), padding=(0, 0, 0)))
         self.group_blocks = nn.ModuleList(group_blocks)
 
-        self.hourglass = Hourglass(block_expansion=block_expansion, in_features=self.mask_embedding.out_channels,
+        self.hourglass = Hourglass(in_features=self.mask_embedding.out_channels,
                                    out_features=(num_kp + 1) * use_mask + 2 * use_correction,
-                                   max_features=max_features, num_blocks=num_blocks)
+                                   max_features=max_features)
         self.hourglass.decoder.conv.weight.data.zero_()
         bias_init = ([bg_init] + [0] * num_kp) * use_mask + [0, 0] * use_correction
         self.hourglass.decoder.conv.bias.data.copy_(torch.tensor(bias_init, dtype=torch.float))

@@ -85,6 +85,22 @@ class DownBlock3D(nn.Module):
         out = self.pool(out)
         return out
 
+class SameBlock3D(nn.Module):
+    """
+    Simple block with group convolution.
+    """
+
+    def __init__(self, in_features, out_features, groups=None, kernel_size=3, padding=1):
+        super(SameBlock3D, self).__init__()
+        self.conv = nn.Conv3d(in_channels=in_features, out_channels=out_features,
+                              kernel_size=kernel_size, padding=padding, groups=groups)
+        self.norm = BatchNorm3d(out_features, affine=True)
+
+    def forward(self, x):
+        out = self.conv(x)
+        out = self.norm(out)
+        out = F.relu(out)
+        return out
 
 class Encoder(nn.Module):
     """
@@ -166,3 +182,18 @@ class Decoder(nn.Module):
         if self.conv is not None:
             return self.conv(out)
         return out
+
+
+class Hourglass(nn.Module):
+    def __init__(self, in_features=3, block_expansion = 32, dimension=2, out_features=10, max_features=1024):
+        super(Hourglass, self).__init__()
+        self.in_features = in_features
+        self.dimension = dimension
+        self.block_expansion = block_expansion
+        self.out_features = out_features
+        self.max_features = max_features
+        self.encoder = Encoder(in_features=self.in_features, max_features=self.max_features, block_expansion=self.block_expansion,dimension=self.dimension)
+        self.decoder = Decoder(in_features=self.in_features, max_features=self.max_features, block_expansion=self.block_expansion, dimension=self.dimension, out_features=self.out_features)
+
+    def forward(self, x):
+        return self.decoder(self.encoder(x))
