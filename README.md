@@ -8,7 +8,7 @@ I started Masters program of data science from March 2021 and decided to leave t
    (Drive save, Talking, Drowsiness, Distraction, Drinking, Facing behind, Sending message(L/R), Talking(L/R), Radio adjustment)
    
    First paper-like outcomes from edge computing course project.
-   Proceed with 3 other students at the class and result more light model for detecting driver status.
+   Proceed with 3 other students at the class and result more light model for detecting driver status. 
 
    Please refer to uploaded [paper](EdgePass/EdgePass__Lightweight_Distracted_and_Drowsiness_Driver_Detection_System.pdf)
    
