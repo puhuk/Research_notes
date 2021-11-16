@@ -185,12 +185,13 @@ class Decoder(nn.Module):
 
 
 class Hourglass(nn.Module):
-    def __init__(self, in_features=3, block_expansion = 32, dimension=2, out_features=10, max_features=1024):
+    def __init__(self, num_kp=10, in_features=3, block_expansion = 32, dimension=2, out_features=10, max_features=1024):
         super(Hourglass, self).__init__()
+        self.num_kp = num_kp
         self.in_features = in_features
         self.dimension = dimension
         self.block_expansion = block_expansion
-        self.out_features = out_features
+        self.out_features = num_kp
         self.max_features = max_features
         self.encoder = Encoder(in_features=self.in_features, max_features=self.max_features, block_expansion=self.block_expansion,dimension=self.dimension)
         self.decoder = Decoder(in_features=self.in_features, max_features=self.max_features, block_expansion=self.block_expansion, dimension=self.dimension, out_features=self.out_features)

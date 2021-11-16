@@ -21,5 +21,6 @@ import glob
 
 from utils import UpBlock2d, DownBlock2d, UpBlock3D, DownBlock3D, Encoder
 
-a = torch.randn([1,3,256,256])
-
+source_img = torch.tensor(cv2.resize(cv2.imread('../../../../../../../dataset/celebA/img_align_celeba/000020.jpg'),(256,256))).float()
+source_img = source_img.permute(2,0,1)
+source_img = torch.unsqueeze(source_img, 0)
